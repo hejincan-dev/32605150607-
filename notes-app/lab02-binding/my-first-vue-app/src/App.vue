@@ -1,78 +1,75 @@
+<!-- ============================================================
+  App.vue —— ch02-fundamentals 第 2 章实验台
+  组织方式（00-规范 2026-10-11 修订）：一章 = 一个完整实验项目；
+  章内按教材小节划分小实验项目（src/experiments/NN-节短名/）。
+  实验台只做两件事：顶部锚点菜单 + 纵向挂载各小实验。
+============================================================ -->
 <template>
- <div id="app">
-    <h1>记事本 · 第 2 章实验</h1>
-    <NoteCard />
+  <div id="app">
+    <h1>ch02-fundamentals｜第 2 章实验台</h1>
+    <p class="muted">第 03 课上半场（2.5.3—2.8）：修饰符串联 · 计算属性 · 侦听器 · 样式绑定</p>
 
-    <SetupDemo />
+    <nav class="lab-nav">
+      <a href="#exp-01">01 修饰符串联</a>
+      <a href="#exp-02">02 计算属性</a>
+      <a href="#exp-03">03 侦听器</a>
+      <a href="#exp-04">04 样式绑定</a>
+    </nav>
 
-    <h3>记事本雏形（综合任务）</h3>
-    <input
-      v-model="newNote"
-      placeholder="输入笔记内容"
-      @keyup.enter="addNote"
-      @keyup.esc="newNote = ''"
-    />
-    <button @click="addNote">添加</button>
-    <br>
-    <label><input type="radio" value="高" v-model="priority" /> 高</label>
-    <label><input type="radio" value="中" v-model="priority" /> 中</label>
-    <label><input type="radio" value="低" v-model="priority" /> 低</label>
-    <br>
-    <label><input type="checkbox" value="待办" v-model="tags" /> 待办</label>
-    <label><input type="checkbox" value="灵感" v-model="tags" /> 灵感</label>
-
-    <p>实时展示 → 内容：{{ newNote }}｜优先级：{{ priority }}｜标签：{{ tags.join('、') || '（未选）' }}</p>
-
-    <ul>
-      <li v-for="(item,idx) in noteList" :key="item.id">
-        {{ idx+1 }}. {{ item.text }} 【{{ item.priority }}】{{ item.tags.join('/') }}
-        <button @click="noteList.splice(idx,1)">删除</button>
-      </li>
-    </ul>
-    <p v-show="noteList.length>0">共 {{ noteList.length }} 条</p>
-    <hr />
-    <h2>🎯 事件实验室（2.4—2.5）</h2>
-    <EventLab />
+    <section id="exp-01">
+      <ModifierChainLab />
+    </section>
+    <section id="exp-02">
+      <ComputedLab />
+    </section>
+    <section id="exp-03">
+      <WatchLab />
+    </section>
+    <section id="exp-04">
+      <StyleBindingLab />
+    </section>
   </div>
 </template>
 
-
 <script>
-import NoteCard from './components/NoteCard.vue'
-import SetupDemo from './components/SetupDemo.vue'
-import EventLab from './components/EventLab.vue'
+import ModifierChainLab from './experiments/01-modifier-chain/ModifierChainLab.vue'
+import ComputedLab from './experiments/02-computed/ComputedLab.vue'
+import WatchLab from './experiments/03-watch/WatchLab.vue'
+import StyleBindingLab from './experiments/04-style-binding/StyleBindingLab.vue'
 
 export default {
-  components: {
-    NoteCard,
-    SetupDemo,
-    EventLab
-
-  },
-  data(){
-    return{
-      newNote:'',
-      priority:'低',
-      tags:[],
-      noteList:[
-        { id:1, text:'学习单文件组件三段结构', priority:'高', tags:['待办'] },
-        { id:2, text:'v‑model表单三件套跑通', priority:'中', tags:['待办','灵感'] },
-        { id:3, text:'给记事本加上删除功能', priority:'低', tags:['待办'] }
-      ],
-      nextId:4
-    }
-  },
-  methods:{
-    addNote(){
-      if(!this.newNote.trim()) return
-      this.noteList.push({
-        id:this.nextId++,
-        text:this.newNote,
-        priority:this.priority,
-        tags:[...this.tags]
-      })
-      this.newNote = ''
-    }
-  }
+  name: 'App',
+  components: { ModifierChainLab, ComputedLab, WatchLab, StyleBindingLab }
 }
 </script>
+
+<style scoped>
+.lab-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0 20px;
+}
+
+.lab-nav a {
+  color: var(--primary-dark);
+  text-decoration: none;
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  padding: 3px 14px;
+  font-size: 14px;
+}
+
+.lab-nav a:hover {
+  background: var(--primary-bg);
+}
+
+section {
+  margin: 18px 0;
+}
+
+.muted {
+  color: var(--muted);
+  margin-top: 0;
+}
+</style>
